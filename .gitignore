@@ -3,3 +3,8 @@ node_modules
 
 # Generated
 dist
+coverage
+
+# Secrets
+certs/*
+!certs/*.config

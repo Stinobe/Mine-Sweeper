@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch localhost",
+      "type": "firefox",
+      "request": "launch",
+      "reAttach": true,
+      "skipFiles": ["**/node_modules/**"],
+      "preLaunchTask": "npm: start",
+      "url": "http://mine-sweeper.local:8080",
+      "pathMappings": [
+        {
+          "url": "webpack://mine-sweeper",
+          "path": "${workspaceFolder}"
+        }
+      ]
+    }
+  ],
+  "compounds": []
+}

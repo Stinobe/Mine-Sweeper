@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const pkgInfo = require("./package.json");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 module.exports = (_, argv) => {
   // Store some information
@@ -8,7 +10,7 @@ module.exports = (_, argv) => {
     // Store flag for later usage
     isProduction = mode === "production",
     // No source-maps on production
-    sourceMaps = isProduction ? false : "eval-source-map",
+    sourceMaps = isProduction ? false : "inline-source-map",
     // Add hash to javascript file on production build to prevent caching
     fileExt = isProduction ? "[contenthash].js" : ".js",
     // Destination folder
@@ -27,13 +29,22 @@ module.exports = (_, argv) => {
     // Set the mode which was sent with the npm command
     mode,
     // Entry file
-    entry: "./src/index.tsx",
+    entry: {
+      [`${pkgInfo.name}`]: "./src/index.tsx",
+      "react-vendors": ["react", "react-dom", "react-router-dom"]
+    },
     // Output
     output: {
       // Destination as defined before
       path: dest,
       // Create filename
-      filename: `${pkgInfo.name}.${fileExt}`,
+      filename: `[name].${fileExt}`,
+      publicPath: "/",
+    },
+    optimization: {
+      splitChunks: {
+        chunks: "all"
+      }
     },
     // Define type of source-maps
     devtool: sourceMaps,
@@ -51,12 +62,36 @@ module.exports = (_, argv) => {
           test: /\.tsx?$/,
           exclude: /node_modules/,
           loader: "ts-loader"
+        },
+        // Rule for styles
+        {
+          test: /\.css$/,
+          exclude: /node_modules/,
+          use: [
+            "style-loader",
+            "css-loader",
+            "postcss-loader"
+          ]
         }
       ]
     },
     resolve: {
       // Extensions to resolve
-      extensions: [".tsx", ".jsx", ".ts", ".js"]
-    }
-  }
+      extensions: [".tsx", ".jsx", ".ts", ".js"],
+      plugins: [
+        new TsconfigPathsPlugin()
+      ]
+    },
+    devServer: {
+      historyApiFallback: true,
+      host: `${pkgInfo.name}.local`,
+      liveReload: true,
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        title: pkgInfo.name,
+        template: "./src/index.html"
+      })
+    ]
+  };
 };
