@@ -6,7 +6,7 @@ class Grid {
   private sizeY: number;
   private totalMines: number;
   private mineList: { x: number, y: number }[] = [];
-  public tiles: Tile[][] = [];
+  public tiles: TileInfo[][] = [];
 
   constructor(x: number, y: number, mines: number) {
     this.sizeX = x;
@@ -19,10 +19,10 @@ class Grid {
   private generateGrid(): void {
     if (this.tiles.length) this.tiles = [];
     for (let i = 0; i < this.sizeY; i++) {
-      const row: Tile[] = [];
+      const row: TileInfo[] = [];
       for (let z = 0; z < this.sizeX; z++) {
         const tile = new Tile(z, i, this.mineList, this.updateTiles.bind(this));
-        row.push(tile);
+        row.push(tile.info);
       }
       this.tiles.push(row);
     }
@@ -50,7 +50,7 @@ class Grid {
   }
 
   public get TileInfo(): TileInfo[][] {
-    return this.tiles.map(row => row.map(tile => tile.info));
+    return this.tiles;
   }
 
   public static getNumberOfMines({ x, y, p }: { x: number, y: number, p: number }): number {

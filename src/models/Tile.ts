@@ -15,19 +15,19 @@ export type TileInfo = {
   exploded: boolean;
   surrounding: number;
   makeVisible: (e?: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-  toggleState: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  toggleState: (e?: React.MouseEvent<HTMLElement, MouseEvent>) => void;
   addComponentListener: (cb: (tile: TileInfo) => void) => void;
 }
 
 class Tile {
-  public coords: { x: number, y: number };
+  private isVisible: boolean = false;
+  private exploded: boolean = false;
+  private componentCb: ((tile: TileInfo) => void)[] = [];
+  
+  private informer: (coords: { x: number, y: number }[]) => void;
   private state: TileStates = TileStates.DEFAULT;
-  public isVisible: boolean = false;
-  public surrounding: number = 0;
-  public exploded: boolean = false;
-  public informer: (coords: { x: number, y: number }[]) => void;
-  public componentCb: ((tile: TileInfo) => void)[] = [];
-
+  private coords: { x: number, y: number };
+  private surrounding: number = 0;
   private hasMine: boolean = false;
 
   constructor(x: number, y: number, mineList: {x: number, y: number}[], informer: (coords: {x: number, y: number}[]) => void) {
@@ -52,7 +52,7 @@ class Tile {
     return this.state === TileStates.MARKED;
   }
 
-  public get isMine(): boolean {
+  private get isMine(): boolean {
     return this.isVisible && this.hasMine;
   }
 
@@ -67,7 +67,7 @@ class Tile {
     this.informComponent();
   }
 
-  public makeVisible(e?: React.MouseEvent<HTMLElement, MouseEvent>) {
+  private makeVisible(e?: React.MouseEvent<HTMLElement, MouseEvent>) {
     if ((this.state === TileStates.DEFAULT) && !this.isVisible) {
       this.isVisible = true;
       if (!this.isMine && this.surrounding === 0) {
@@ -80,11 +80,11 @@ class Tile {
     }    
   }
 
-  public informSurroundings() {
+  private informSurroundings() {
     this.informer(this.surroundingCoords);
   }
 
-  public addComponentListener(cb: (tile: TileInfo) => void): void {
+  private addComponentListener(cb: (tile: TileInfo) => void): void {
     this.componentCb.push(cb);
   }
 
@@ -94,7 +94,12 @@ class Tile {
     });
   }
 
-  public changeState(e: React.MouseEvent<HTMLElement, MouseEvent>) {
+  private changeState(e?: React.MouseEvent<HTMLElement, MouseEvent>) {
+    if (!e) {
+      this.updateState();
+      return;
+    }
+    
     e.preventDefault();
     switch (e.button) {
       case 2: this.updateState(); break;
