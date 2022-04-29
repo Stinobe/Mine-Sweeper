@@ -52,6 +52,26 @@ class Grid {
   public get TileInfo(): TileInfo[][] {
     return this.tiles.map(row => row.map(tile => tile.info));
   }
+
+  public static getNumberOfMines({ x, y, p }: { x: number, y: number, p: number }): number {
+    const perc = p < 1 ? p : p / 100;
+    return Math.round((x * y) * perc);
+  }
+
+  private static getMaxForScreen = (size: number, gap: number): { x: number, y: number } => {
+    const { innerWidth, innerHeight } = window;
+    const maxWidth = Math.floor(innerWidth * 0.9);
+    const maxHeight = Math.floor(innerHeight * 0.9);
+    const tileSize = size + gap;
+    return {
+      x: Math.floor(maxWidth / tileSize),
+      y: Math.floor(maxHeight / tileSize)
+    }
+  }
+
+  public static get maxForScreen(): { x: number, y: number } {
+    return this.getMaxForScreen(40, 4);
+  }
 }
 
 export default Grid;

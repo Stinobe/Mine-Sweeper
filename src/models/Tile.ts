@@ -1,19 +1,27 @@
 import GameEvents, { GameEvent } from "@/utils/EventDispatcher";
+import React from "react";
+
+enum TileStates {
+  "DEFAULT",
+  "FLAGGED",
+  "MARKED"
+}
 
 export type TileInfo = {
   isMine: boolean;
   isFlagged: boolean;
+  isMarked: boolean;
   isVisible: boolean;
   exploded: boolean;
   surrounding: number;
-  makeVisible: () => void;
-  toggleFlag: () => void;
+  makeVisible: (e?: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  toggleState: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
   addComponentListener: (cb: (tile: TileInfo) => void) => void;
 }
 
 class Tile {
   public coords: { x: number, y: number };
-  public isFlagged: boolean = false;
+  private state: TileStates = TileStates.DEFAULT;
   public isVisible: boolean = false;
   public surrounding: number = 0;
   public exploded: boolean = false;
@@ -36,18 +44,31 @@ class Tile {
     });
   }
 
+  private get isFlagged(): boolean {
+    return this.state === TileStates.FLAGGED;
+  }
+
+  private get isMarked(): boolean {
+    return this.state === TileStates.MARKED;
+  }
+
   public get isMine(): boolean {
     return this.isVisible && this.hasMine;
   }
 
-  public toggleFlag() {
-    this.isFlagged = !this.isFlagged;
-    GameEvents.trigger(GameEvent.TOGGLE_FLAG, this.isFlagged ? 1 : -1);
+  private updateState(): void {
+    if (this.isVisible) return;
+    switch (this.state) {
+      case TileStates.DEFAULT: this.state = TileStates.FLAGGED; break;
+      case TileStates.FLAGGED: this.state = TileStates.MARKED; break;
+      case TileStates.MARKED: this.state = TileStates.DEFAULT; break;
+    }
+    GameEvents.trigger(GameEvent.TOGGLE_STATE);
     this.informComponent();
   }
 
-  public makeVisible() {
-    if (!this.isFlagged && !this.isVisible) {
+  public makeVisible(e?: React.MouseEvent<HTMLElement, MouseEvent>) {
+    if ((this.state === TileStates.DEFAULT) && !this.isVisible) {
       this.isVisible = true;
       if (!this.isMine && this.surrounding === 0) {
         this.informSurroundings();
@@ -73,6 +94,14 @@ class Tile {
     });
   }
 
+  public changeState(e: React.MouseEvent<HTMLElement, MouseEvent>) {
+    e.preventDefault();
+    switch (e.button) {
+      case 2: this.updateState(); break;
+      default: this.makeVisible();
+    }
+  }
+
   private get surroundingCoords(): { x: number, y: number }[] {
     const calc = [-1, 0, 1];
     const coords: { x: number, y: number }[] = [];
@@ -92,11 +121,12 @@ class Tile {
     return {
       isMine: this.isMine,
       isFlagged: this.isFlagged,
+      isMarked: this.isMarked,
       isVisible: this.isVisible,
       exploded: this.exploded,
       surrounding: this.isVisible ? this.surrounding : 0,
       makeVisible: this.makeVisible.bind(this),
-      toggleFlag: this.toggleFlag.bind(this),
+      toggleState: this.changeState.bind(this),
       addComponentListener: this.addComponentListener.bind(this)
     }
   }

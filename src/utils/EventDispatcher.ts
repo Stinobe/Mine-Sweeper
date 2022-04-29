@@ -1,5 +1,5 @@
 export enum GameEvent {
-  "TOGGLE_FLAG",
+  "TOGGLE_STATE",
   "OPEN_MINE"
 };
 

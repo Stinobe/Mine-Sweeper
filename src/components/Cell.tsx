@@ -1,6 +1,10 @@
 import { TileInfo } from "@/models/Tile";
 import classes from "@/utils/Classes";
-import { FireIcon, FlagIcon } from "@heroicons/react/outline";
+import {
+  FireIcon,
+  FlagIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/outline";
 import React, { useState } from "react";
 import { GameMode } from "./Game";
 
@@ -34,13 +38,8 @@ const Cell: React.FC<CellProps> = ({ tile, x, y, mode }: CellProps) => {
         </span>
       ) : (
         <span
-          onClick={() => {
-            if (mode === GameMode.SWEEP) {
-              cell.makeVisible();
-            } else if (mode === GameMode.FLAG) {
-              cell.toggleFlag();
-            }
-          }}
+          onClick={cell.makeVisible}
+          onContextMenu={cell.toggleState}
           className={classes(
             "absolute top-0 right-0 bottom-0 left-0 transition-colors grid justify-center content-center bg-white/40 dark:bg-black/40",
             {
@@ -53,10 +52,11 @@ const Cell: React.FC<CellProps> = ({ tile, x, y, mode }: CellProps) => {
             }
           )}>
           <span>
-            {cell.isFlagged ? (
-              <FlagIcon className="h-4 w-4 text-yellow-700 dark:text-yellow-300" />
-            ) : (
-              ""
+            {cell.isFlagged && (
+              <FlagIcon className="h-5 w-5 text-yellow-700 dark:text-yellow-300" />
+            )}
+            {cell.isMarked && (
+              <QuestionMarkCircleIcon className="h-6 w-6 text-yellow-700 dark:text-blue-500" />
             )}
           </span>
         </span>
