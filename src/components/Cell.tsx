@@ -6,16 +6,14 @@ import {
   QuestionMarkCircleIcon,
 } from "@heroicons/react/outline";
 import React, { useState } from "react";
-import { GameMode } from "./Game";
 
 type CellProps = {
   tile: TileInfo;
   x: number;
   y: number;
-  mode: GameMode;
 };
 
-const Cell: React.FC<CellProps> = ({ tile, x, y, mode }: CellProps) => {
+const Cell: React.FC<CellProps> = ({ tile }: CellProps) => {
   const [cell, setCell] = useState(tile);
   tile.addComponentListener(setCell);
   return (
@@ -43,12 +41,9 @@ const Cell: React.FC<CellProps> = ({ tile, x, y, mode }: CellProps) => {
           className={classes(
             "absolute top-0 right-0 bottom-0 left-0 transition-colors grid justify-center content-center bg-white/40 dark:bg-black/40",
             {
-              "cursor-pointer":
-                !cell.isFlagged || (cell.isFlagged && mode === GameMode.FLAG),
-              "hover:bg-white/60":
-                !cell.isFlagged || (cell.isFlagged && mode === GameMode.FLAG),
-              "dark:hover:bg-black/60":
-                !cell.isFlagged || (cell.isFlagged && mode === GameMode.FLAG),
+              "cursor-pointer": true,
+              "hover:bg-white/60": true,
+              "dark:hover:bg-black/60": true,
             }
           )}>
           <span>
