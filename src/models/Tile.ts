@@ -67,7 +67,7 @@ class Tile {
     this.informComponent();
   }
 
-  private makeVisible(e?: React.MouseEvent<HTMLElement, MouseEvent>) {
+  private makeVisible() {
     if ((this.state === TileStates.DEFAULT) && !this.isVisible) {
       this.isVisible = true;
       if (!this.isMine && this.surrounding === 0) {
@@ -94,13 +94,14 @@ class Tile {
     });
   }
 
-  private changeState(e?: React.MouseEvent<HTMLElement, MouseEvent>) {
+  private changeState(e?: React.MouseEvent<HTMLElement, MouseEvent>): void {
     if (!e) {
       this.updateState();
       return;
     }
-    
+
     e.preventDefault();
+    
     switch (e.button) {
       case 2: this.updateState(); break;
       default: this.makeVisible();
