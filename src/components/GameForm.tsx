@@ -10,7 +10,7 @@ type GameFormProps = {
 };
 
 const GameForm: React.FC<GameFormProps> = ({ boards }: GameFormProps) => {
-  const [isOptimized, setIsOptimized] = useState<boolean>(false);
+  const [isOptimized, setIsOptimized] = useState<boolean>(true);
 
   const toggleOptimized = (): void => {
     setIsOptimized(!isOptimized);
@@ -39,7 +39,7 @@ const GameForm: React.FC<GameFormProps> = ({ boards }: GameFormProps) => {
 
   return (
     <div className="min-w-max">
-      <div className="flex flex-col gap-4 w-96">
+      <div className="flex flex-col gap-4 w-96 px-4">
         <Optimize
           onToggle={toggleOptimized}
           maxSize={maxSize}
