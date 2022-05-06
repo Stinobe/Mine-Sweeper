@@ -1,5 +1,6 @@
 import { TileInfo } from "@/models/Tile";
 import classes from "@/utils/Classes";
+import TouchEvent from "@/utils/Touch";
 import {
   FireIcon,
   FlagIcon,
@@ -16,6 +17,9 @@ type CellProps = {
 const Cell: React.FC<CellProps> = ({ tile }: CellProps) => {
   const [cell, setCell] = useState(tile);
   tile.addComponentListener(setCell);
+
+  const touchEvent = new TouchEvent(cell.makeVisible, cell.toggleState);
+
   return (
     <div className="w-10 h-10 flex content-center justify-center relative">
       {cell.isVisible ? (
@@ -36,6 +40,8 @@ const Cell: React.FC<CellProps> = ({ tile }: CellProps) => {
         </span>
       ) : (
         <span
+          onTouchStart={touchEvent.start}
+          onTouchEnd={touchEvent.end}
           onClick={cell.makeVisible}
           onContextMenu={cell.toggleState}
           className={classes(

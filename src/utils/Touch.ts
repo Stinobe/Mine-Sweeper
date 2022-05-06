@@ -13,8 +13,9 @@ class TouchEvent<T> {
 
   private startEvent(e: T): void {
     if (this.isBusy) return;
+    this.isBusy = true;
     this.timeout = setTimeout(() => {
-      this.isBusy = true;
+      this.isBusy = false;
       this.cbHold();
     }, this.delay);
   }

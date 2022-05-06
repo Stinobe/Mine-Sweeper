@@ -95,6 +95,7 @@ class Tile {
   }
 
   private changeState(e?: React.MouseEvent<HTMLElement, MouseEvent>): void {
+    console.log("Change state");
     if (!e) {
       this.updateState();
       return;
