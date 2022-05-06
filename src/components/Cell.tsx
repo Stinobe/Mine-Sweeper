@@ -30,7 +30,16 @@ const Cell: React.FC<CellProps> = ({ tile }: CellProps) => {
   return (
     <div className="w-10 h-10 flex content-center justify-center relative">
       {hasInteraction && (
-        <div className="absolute left-0 right-0 top-0 bottom-0 animate-ping bg-white/40 dark:bg-black/40 rounded-full"></div>
+        <div
+          className={classes(
+            "absolute -left-1 -right-1 -top-1 -bottom-1 animate-ping md:hidden rounded-full",
+            cell.isFlagged
+              ? "bg-yellow-700/40 dark:bg-yellow-300/40"
+              : "bg-white/40 dark:bg-black/40",
+            cell.isMarked
+              ? "bg-blue-700/40 dark:bg-blue-500/40"
+              : "bg-white/40 dark:bg-black/40"
+          )}></div>
       )}
       {cell.isVisible ? (
         <span
