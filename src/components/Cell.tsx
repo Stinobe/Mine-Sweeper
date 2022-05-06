@@ -18,10 +18,20 @@ const Cell: React.FC<CellProps> = ({ tile }: CellProps) => {
   const [cell, setCell] = useState(tile);
   tile.addComponentListener(setCell);
 
-  const touchEvent = new TouchEvent(cell.makeVisible, cell.toggleState);
+  const [hasInteraction, setHasInteraction] = useState<boolean>(false);
+
+  const touchEvent = new TouchEvent(cell.makeVisible, cell.toggleState, () => {
+    setHasInteraction(true);
+    setTimeout(() => {
+      setHasInteraction(false);
+    }, 400);
+  });
 
   return (
     <div className="w-10 h-10 flex content-center justify-center relative">
+      {hasInteraction && (
+        <div className="absolute left-0 right-0 top-0 bottom-0 animate-ping bg-white/40 dark:bg-black/40 rounded-full"></div>
+      )}
       {cell.isVisible ? (
         <span
           className={classes(
@@ -57,7 +67,7 @@ const Cell: React.FC<CellProps> = ({ tile }: CellProps) => {
               <FlagIcon className="h-5 w-5 text-yellow-700 dark:text-yellow-300" />
             )}
             {cell.isMarked && (
-              <QuestionMarkCircleIcon className="h-6 w-6 text-yellow-700 dark:text-blue-500" />
+              <QuestionMarkCircleIcon className="h-6 w-6 text-blue-700 dark:text-blue-500" />
             )}
           </span>
         </span>
