@@ -3,6 +3,7 @@ import { ChevronLeftIcon } from "@heroicons/react/outline";
 import React from "react";
 import { Link } from "react-router-dom";
 import Cell from "./Cell";
+import IconButton from "./IconButton";
 
 type GameProps = {
   tiles: TileInfo[][];
@@ -14,7 +15,7 @@ const Game: React.FC<GameProps> = ({ tiles }: GameProps) => {
       <div className="grid mb-4">
         <div className="flex justify-between">
           <Link to="/">
-            <ChevronLeftIcon className="h-5 w-5" />
+            <IconButton label="Menu" icon={ChevronLeftIcon} />
           </Link>
         </div>
       </div>

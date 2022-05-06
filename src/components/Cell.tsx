@@ -42,8 +42,8 @@ const Cell: React.FC<CellProps> = ({ tile }: CellProps) => {
         <span
           onTouchStart={touchEvent.start}
           onTouchEnd={touchEvent.end}
-          onClick={cell.makeVisible}
-          onContextMenu={cell.toggleState}
+          onClick={touchEvent.click}
+          onContextMenu={touchEvent.context}
           className={classes(
             "absolute top-0 right-0 bottom-0 left-0 transition-colors grid justify-center content-center bg-white/40 dark:bg-black/40",
             {
