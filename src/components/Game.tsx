@@ -4,6 +4,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Cell from "./Cell";
 import IconButton from "./IconButton";
+import GameState from "./State";
 
 type GameProps = {
   tiles: TileInfo[][];
@@ -13,10 +14,11 @@ const Game: React.FC<GameProps> = ({ tiles }: GameProps) => {
   return (
     <>
       <div className="grid mb-4">
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <Link to="/">
             <IconButton label="Menu" icon={ChevronLeftIcon} />
           </Link>
+          <GameState />
         </div>
       </div>
       <div className="flex-col inline-flex gap-1">

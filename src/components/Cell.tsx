@@ -47,7 +47,10 @@ const Cell: React.FC<CellProps> = ({ tile }: CellProps) => {
             "absolute top-0 right-0 bottom-0 left-0 transition-colors grid justify-center content-center",
             cell.exploded
               ? "bg-red-400 dark:bg-red-800 text-white"
-              : "bg-white/30 dark:bg-black/20"
+              : "bg-white/30 dark:bg-black/20",
+            cell.isFlagged && cell.isMine
+              ? "bg-green-600 dark:bg-green-700"
+              : ""
           )}>
           <span className="inline-block align-bottom">
             {cell.isMine ? (
